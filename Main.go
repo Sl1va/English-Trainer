@@ -27,7 +27,7 @@ func training() {
 	run := true
 	for run {
 		// choose random unlearned word index
-		uRand := rand.Intn(len(vocabulary))
+		uRand := rand.Intn(int(len(vocabulary)))
 
 		// choose random position in question
 		randPos := rand.Intn(4)
