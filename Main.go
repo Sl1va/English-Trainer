@@ -1,9 +1,12 @@
 package main
 
 import (
-	. "./vocabulary"
+	"encoding/json"
 	"fmt"
+	. "github.com/Sl1va/English-Trainer/vocabulary"
+	"io/ioutil"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 )
@@ -14,9 +17,8 @@ var (
 	learned    Vocabulary // learned words
 )
 
-
-const (
-	need = 3
+var (
+	need = 5
 	add  = 1
 	sub  = 2
 )
@@ -148,15 +150,15 @@ func training() {
 	}
 }
 
-func addNewWord(){
-		var eng, rus string
-		fmt.Println("english: ")
-		fmt.Scan(&eng)
-		fmt.Println("russian: ")
-		fmt.Scan(&rus)
-		word := Word{Eng: eng, Rus: rus}
-		vocabulary.Add(word)
-		regular.Add(word)
+func addNewWord() {
+	var eng, rus string
+	fmt.Println("english: ")
+	fmt.Scan(&eng)
+	fmt.Println("russian: ")
+	fmt.Scan(&rus)
+	word := Word{Eng: eng, Rus: rus}
+	vocabulary.Add(word)
+	regular.Add(word)
 }
 
 func checkCommand(com string) bool {
@@ -166,25 +168,43 @@ func checkCommand(com string) bool {
 		fmt.Println(vocabulary)
 	} else if com == "learned" {
 		fmt.Println(learned)
-	}else if com == "add" {
+	} else if com == "add" {
 		addNewWord()
-	}else if com == "save"{
+	} else if com == "conf" {
+		fmt.Printf("need=%d\nadd=%d\nsub=%d\n", need, add, sub)
+	} else if com == "save" {
 		fmt.Println("filename: ")
 		var name string
 		fmt.Scan(&name)
 		err := regular.SaveVocabulary(name)
-		if err != nil{
+		if err != nil {
 			fmt.Println("Couldn't save vocabulary")
-		}else{
+		} else {
 			fmt.Println("Saved!")
 		}
 	}
 	return isDigit
 }
 
+type Conf struct {
+	Need int `json:"need"`
+	Add  int `json:"add"`
+	Sub  int `json:"sub"`
+}
 
+func readConf() {
+	file, _ := os.Open("conf.txt")
+	data, _ := ioutil.ReadAll(file)
+	var conf Conf
+	json.Unmarshal(data, &conf)
+	need = conf.Need
+	add = conf.Add
+	sub = conf.Sub
+}
 
 func main() {
+	readConf()
+
 	// read vocabulary and regular
 	vocabulary, _ = ReadVocabulary("vocabulary.txt")
 	regular = make(Vocabulary, len(vocabulary))
