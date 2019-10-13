@@ -28,7 +28,8 @@ func ReadVocabulary(name string) (Vocabulary, error) {
 	if err != nil {
 		return nil, err
 	}
-	vocStrings := strings.Split(string(vocBytes), ";")
+	t := strings.Replace(string(vocBytes), "\n", "", -1)
+	vocStrings := strings.Split(t, ";")
 	vocabulary := NewVocabulary()
 	for _, v := range vocStrings {
 		word := strings.Split(v, "$")
@@ -48,7 +49,7 @@ func (v Vocabulary) SaveVocabulary(name string) error {
 
 	// saving
 	file, err := os.Create(name)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 	file.Write([]byte(data))

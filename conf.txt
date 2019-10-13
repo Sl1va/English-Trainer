@@ -1,1 +1,1 @@
-{"need":10, "add":1, "sub":4}
+{"need":10, "add":1, "sub":4, "vocabulary":"english2.txt"}

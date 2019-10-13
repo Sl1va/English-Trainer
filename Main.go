@@ -18,9 +18,10 @@ var (
 )
 
 var (
-	need = 5
-	add  = 1
-	sub  = 2
+	need         = 5
+	add          = 1
+	sub          = 2
+	voc_filename string
 )
 
 func training() {
@@ -187,9 +188,10 @@ func checkCommand(com string) bool {
 }
 
 type Conf struct {
-	Need int `json:"need"`
-	Add  int `json:"add"`
-	Sub  int `json:"sub"`
+	Need int    `json:"need"`
+	Add  int    `json:"add"`
+	Sub  int    `json:"sub"`
+	Voc  string `json:"vocabulary"`
 }
 
 func readConf() {
@@ -200,13 +202,14 @@ func readConf() {
 	need = conf.Need
 	add = conf.Add
 	sub = conf.Sub
+	voc_filename = conf.Voc
 }
 
 func main() {
 	readConf()
 
 	// read vocabulary and regular
-	vocabulary, _ = ReadVocabulary("vocabulary.txt")
+	vocabulary, _ = ReadVocabulary(voc_filename)
 	regular = make(Vocabulary, len(vocabulary))
 	copy(regular, vocabulary)
 
